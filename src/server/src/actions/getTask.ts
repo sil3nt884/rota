@@ -7,7 +7,8 @@ let listenerSet = false;
 export const getTask = async (req: Request, res: Response, cache: NodeCache) => {
   const unassignedTask : any = cache.get('unassignedTask');
   const assignedTask : any = cache.get('assignedTask');
-  const [unassignedTaskKey, assignedTaskKey] = ['unassignedTask', 'assignedTask'];
+  const doneTask : any = cache.get('doneTask');
+  const [unassignedTaskKey, assignedTaskKey, doneTaskKey] = ['unassignedTask', 'assignedTask', 'done'];
   const tll = 600;
 
   if (!unassignedTask) {
@@ -22,6 +23,11 @@ export const getTask = async (req: Request, res: Response, cache: NodeCache) => 
     cache.set(assignedTaskKey, data, tll);
   }
 
+  if (!doneTask) {
+    const data = await fetch('done_tasks');
+    cache.set(doneTaskKey, data, tll);
+  }
+
   const expiredCB = async (key : string, value: string) => {
     console.log('expired', key);
     if (key === unassignedTaskKey) {
@@ -32,6 +38,11 @@ export const getTask = async (req: Request, res: Response, cache: NodeCache) => 
     if (key === assignedTaskKey) {
       const data = await fetch('assigned_tasks');
       cache.set(assignedTaskKey, data, tll);
+    }
+
+    if (key === doneTaskKey) {
+      const data = await fetch('done_tasks');
+      cache.set(doneTaskKey, data, tll);
     }
   };
 

@@ -22,3 +22,14 @@ CREATE VIEW assignees AS
 select a.id,
        a.name
 from assignee a;
+
+
+CREATE VIEW done_tasks AS
+select t.id,
+       t.assigneeID,
+       t.title,
+       t.description,
+       t.description,
+       t.image,
+       t.state
+from task t where t.state = 'done'

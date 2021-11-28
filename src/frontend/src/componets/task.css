@@ -41,3 +41,26 @@ div.imageContainer:hover {
 .Title{
     font-weight: bold;
 }
+
+table {
+    position: absolute;
+    padding-left: 50px;
+}
+
+.containerAssigned {
+    border-radius: 25px;
+    background: #d9d9d945;
+    padding: 20px;
+    width: 200px;
+    box-shadow: 1px 1px #959595;
+    height: 150px;
+    min-height: 250px;
+}
+
+td {
+    padding-right: 10px;
+}
+
+th {
+    font-size: 25px;
+}
