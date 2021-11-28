@@ -6,7 +6,7 @@ export type Task = {
     assigneeID? : string
     description : string
     state : state
-    image?: Buffer
+    image?: string
 }
 
 
