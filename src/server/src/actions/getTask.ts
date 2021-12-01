@@ -8,7 +8,7 @@ export const getTask = async (req: Request, res: Response, cache: NodeCache) => 
   const unassignedTask : any = cache.get('unassignedTask');
   const assignedTask : any = cache.get('assignedTask');
   const doneTask : any = cache.get('doneTask');
-  const [unassignedTaskKey, assignedTaskKey, doneTaskKey] = ['unassignedTask', 'assignedTask', 'done'];
+  const [unassignedTaskKey, assignedTaskKey, doneTaskKey] = ['unassignedTask', 'assignedTask', 'doneTask'];
   const tll = 600;
 
   if (!unassignedTask) {
@@ -52,5 +52,5 @@ export const getTask = async (req: Request, res: Response, cache: NodeCache) => 
   }
 
 
-  return res.status(200).json({unassignedTask, assignedTask});
+  return res.status(200).json({unassignedTask, assignedTask, doneTask});
 };

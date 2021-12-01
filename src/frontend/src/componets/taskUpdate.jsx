@@ -1,13 +1,13 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { usePoll } from '../poller/poller'
 import './updateTask.css'
 export const TaskUpdate = () =>{
 
   let { data }  = usePoll('/task', 1000)
-  const  { assignedTask  , unassignedTask } = data
+  const  { assignedTask  , unassignedTask, done } = data
   let allTask = []
   if(assignedTask && unassignedTask) {
-    allTask = [...assignedTask, ...unassignedTask]
+    allTask = [...assignedTask, ...unassignedTask, ...done]
   }
 
   const [taskId, setTaskId] = useState(undefined)
@@ -25,6 +25,21 @@ export const TaskUpdate = () =>{
   }
 
 
+  function respondToVisibility(element, callback) {
+    const options = {
+      root: document.documentElement,
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        callback(entry.intersectionRatio > 0);
+      });
+    }, options);
+
+    observer.observe(element);
+  }
+
+
 
   const sendForm = async (element) => {
     element.preventDefault()
@@ -39,10 +54,12 @@ export const TaskUpdate = () =>{
     }
     const jsonString = JSON.stringify(body, null, 0)
     const textEncoded = new TextEncoder()
-
-
-    const readFile = new Promise(getBuffer(file))
-    const fileBytes  = await readFile
+    let readFile
+    let fileBytes = [0]
+    if(file) {
+      readFile = new Promise(getBuffer(file))
+      fileBytes  = await readFile
+    }
     const jsonByte = new Int8Array(textEncoded.encode(jsonString).buffer)
     const bytes  = [jsonByte.length,...jsonByte,new Int8Array(fileBytes)]
     await fetch(`/updateTask/${id}/`,  {
@@ -51,6 +68,7 @@ export const TaskUpdate = () =>{
          headers: {
         'content-type': 'application/octet-stream'
       }})
+    document.getElementsByTagName('form')[0].reset()
   }
 
   const getTask = (element) => {
@@ -60,10 +78,11 @@ export const TaskUpdate = () =>{
     setTaskId(value.value)
   }
 
+
   return (
     <div className={"updateTask"}>
 
-      <form>
+      <form id={"updateForm"}>
         <p>Update Task</p>
         <div>
           <label>Task ID:</label>

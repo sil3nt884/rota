@@ -6,7 +6,7 @@ select t.id,
        t.image,
        t.state,
        a.name as assignee
-       from task t join assignee a on t.assigneeID = a.id;
+       from task t join assignee a on t.assigneeID = a.id and t.state != 'done';
 
 CREATE VIEW unsigned_tasks AS
 select t.id,

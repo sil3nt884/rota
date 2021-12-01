@@ -1,3 +1,59 @@
 .updateTask {
-    display:  none;
+    display: none;
+    z-index: 1;
+    margin-left: 35%;
+    margin-right: 25%;
+    position: absolute;
+    top: 18vh;
+    width: 500px;
+    border: solid;
+    background-color: hsla(0,0%,39.2%,.8901960784313725);
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 1px 1px #959595;
+    color: #fff;
+}
+
+form p {
+    margin-left: 40%;
+}
+
+form {
+    width: 80%;
+    margin: 0 auto;
+}
+
+label,
+input {
+    /* In order to define widths */
+    display: inline-block;
+}
+
+label {
+    width: 14%;
+}
+
+label+input {
+    width: 53%;
+    margin: 0 -1% 3px 4%;
+}
+
+/* Only the submit button is matched by this selector,
+       but to be sure you could use an id or class for that button */
+
+input+input {
+    float: right;
+}
+
+input[type=submit] {
+    margin-left: 40%;
+    margin-top: 10px;
+
+}
+
+input[type="text" i] {
+    padding: 1px 2px;
+    width: 100%;
+    height: 23px;
+    border-radius: 9px;
 }
