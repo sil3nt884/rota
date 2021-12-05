@@ -9,6 +9,6 @@
      "front-build": "cd src/frontend/ && npm run build"
    },
   "engines": {
-    "node": "14.x"
+    "node": "14.18.0"
   }
 }
