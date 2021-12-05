@@ -23,3 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 /rota.iml
 /src/server/node_modules/
+/src/server/dist/
