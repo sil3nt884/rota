@@ -7,5 +7,8 @@
      "start": "npm run front-build && npm run backend-build && node src/server/dist/app.js",
      "backend-build": "cd src/server/ && npm run build",
      "front-build": "cd src/frontend/ && npm run build"
-   }
+   },
+  "engines": {
+    "node": "14.x"
+  }
 }
