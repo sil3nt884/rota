@@ -12,7 +12,9 @@ import getAssignees from './src/actions/getAssignee';
 import createAssignee from './src/actions/createAssignee';
 import * as Cache from 'Node-Cache';
 import byteStreamHandler from './src/handlers/byteStreamHandler';
-
+import handleUpdates from './src/handlers/handleSubs';
+import {createSub} from './src/handlers/createSub';
+import {events} from './src/events';
 
 const config = dotenv.config().parsed;
 const keys = Object.keys(config);
@@ -39,12 +41,15 @@ app.post('/createTask', createTask);
 app.patch('/updateTask/:id', updateTask);
 
 app.get('/task', (req, res) => {
-  getTask(req, res, cache);
+  getTask(req, res, cache, events);
 });
 
 app.get('/assignee', (req, res) => {
-  getAssignees(req, res, cache);
+  getAssignees(req, res, cache, events);
 });
+
+app.post('/subscription/', createSub);
+app.get('/subscription/:id', (req, res) => handleUpdates(cache, req, res, events));
 
 const server = {
   start: () => {

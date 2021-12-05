@@ -38,3 +38,5 @@ export const fetch = async (table : string) => {
   await closeDB(db);
   return results;
 };
+
+

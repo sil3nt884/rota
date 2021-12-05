@@ -10,6 +10,8 @@ export default async (req: Request, res: Response) => {
     title,
     description,
     state: 'not done',
+    created_at: new Date().toISOString(),
+    last_updated_at: new Date().toISOString()
   };
   await insert(taskBody, 'task');
   return res.status(200).json('Added Task');

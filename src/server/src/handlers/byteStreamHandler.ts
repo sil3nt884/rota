@@ -1,6 +1,4 @@
 import {Request, Response} from 'express';
-import * as fs from 'fs';
-
 export interface CustomRequest extends Request {
    rawBody : any
    rawBytes: any

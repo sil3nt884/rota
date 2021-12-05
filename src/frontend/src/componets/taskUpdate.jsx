@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { usePoll } from '../poller/poller'
 import './updateTask.css'
 export const TaskUpdate = () =>{
 
-  let { data }  = usePoll('/task', 1000)
-  const  { assignedTask  , unassignedTask, done } = data
+  let assigneesData  = usePoll('/assignee', 9000)
+  const { assignees } = assigneesData.data
+  let { data }  = usePoll('/task', 9000)
+  const  { assignedTask  , unassignedTask, doneTask } = data
   let allTask = []
   if(assignedTask && unassignedTask) {
-    allTask = [...assignedTask, ...unassignedTask, ...done]
+    allTask = [...assignedTask, ...unassignedTask, ...doneTask]
   }
 
   const [taskId, setTaskId] = useState(undefined)
@@ -25,27 +27,15 @@ export const TaskUpdate = () =>{
   }
 
 
-  function respondToVisibility(element, callback) {
-    const options = {
-      root: document.documentElement,
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        callback(entry.intersectionRatio > 0);
-      });
-    }, options);
-
-    observer.observe(element);
-  }
-
-
-
   const sendForm = async (element) => {
     element.preventDefault()
     const id = document.getElementById('id').value
     const state = document.getElementById("state").value;
-    const assigneeID = document.getElementById("assignee").value;
+    const assigneeIDSelect = document.getElementById("assignees")
+    const index = assigneeIDSelect.selectedIndex
+    const options = assigneeIDSelect.options
+    const assigneeID = options[index].value
+    console.log(assigneeID)
     const image = document.getElementById("image").files
     const file = image[0]
     const body = {
@@ -68,7 +58,7 @@ export const TaskUpdate = () =>{
          headers: {
         'content-type': 'application/octet-stream'
       }})
-    document.getElementsByTagName('form')[0].reset()
+    document.getElementById('updateForm').reset()
   }
 
   const getTask = (element) => {
@@ -100,7 +90,7 @@ export const TaskUpdate = () =>{
                      <ul>
                         {Object.keys(task)
                           .map(e => {
-                            return <li id={"id"}>{`${e}:${task[e]}`}</li>
+                            return <li id={"id"}><strong className={'taskText'}>{`${e}:`}</strong>{` ${task[e]}`}</li>
                           })}
                      </ul>
                   </div>
@@ -111,9 +101,10 @@ export const TaskUpdate = () =>{
         </div>
 
         <div>
-          <label>Assignee:</label>
-          <input id="assignee" type="text" />
-
+          <label>Assignee: </label>
+          <select id={"assignees"}>
+            {assignees ? assignees.map(({id, name}) => <option id={'assignee'} value={id}> {` ${name}`}</option>) : "...loading"}
+          </select>
         </div>
         <div>
           <label>State:</label>

@@ -7,6 +7,8 @@ export type Task = {
     description : string
     state : state
     image?: string
+    created_at : string,
+    last_updated_at: string
 }
 
 

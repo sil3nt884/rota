@@ -48,7 +48,9 @@ exports["default"] = (function (req, res) { return __awaiter(void 0, void 0, voi
                     id: (0, uuid_1.v4)(),
                     title: title,
                     description: description,
-                    state: 'not done'
+                    state: 'not done',
+                    created_at: new Date().toISOString(),
+                    last_updated_at: new Date().toISOString()
                 };
                 return [4, (0, db_1.insert)(taskBody, 'task')];
             case 1:

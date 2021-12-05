@@ -46,7 +46,7 @@ export default async (req: CustomRequest, res: Response) => {
       return res.status(404).json('no state provided not found ');
     }
 
-    await update({...existingRecord, assigneeID, state, image: imageBased64}, Database.TASK);
+    await update({...existingRecord, assigneeID, state, image: imageBased64, last_updated_at: new Date().toISOString()}, Database.TASK);
     return res.status(200).json('Task updated');
   } else {
     return res.status(400).json('Bad Request');

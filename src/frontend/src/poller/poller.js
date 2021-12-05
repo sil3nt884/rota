@@ -1,6 +1,7 @@
-import { useEffect , useState } from 'react';
+import { useState } from 'react';
+import {useInterval} from './useInterval';
 
-export const usePoll = (url, pollingInterval = 1000)  => {
+export const usePoll = (url, pollingInterval )  => {
     let [data, setData] = useState({})
     const fetchData =  async (url)  => {
       setData(await fetch(url)
@@ -8,11 +9,9 @@ export const usePoll = (url, pollingInterval = 1000)  => {
         .then(data => data));
     }
 
-    useEffect(()=> {
-        setTimeout(async () => {
-          await fetchData(url)
-        },pollingInterval)
-    }, [fetchData])
+  useInterval(async () => {
+    await fetchData(url)
+   }, pollingInterval);
 
   return {data}
 }
