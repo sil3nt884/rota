@@ -4,7 +4,7 @@
   "main": "src/server/dist/app.js",
   "scripts": {
       "postinstall": "npm install --prefix src/frontend && npm install --prefix src/server ",
-     "start": "npm run front-build && npm run backend-build && node src/server/dist/app.js",
+     "start": "npm run front-build && node src/server/dist/app.js",
      "backend-build": "cd src/server/ && npm run build",
      "front-build": "cd src/frontend/ && npm run build"
    },
