@@ -1,8 +1,7 @@
 import {Response} from 'express';
-import {update, findByID} from '../service/db';
-import {Database} from './contants';
-
+import {serverWrite} from '../service/serverExcutetor';
 import {CustomRequest} from '../handlers/byteStreamHandler';
+import {Assignee, Task} from '../types/types';
 
 
 const readPartOfBuffer = (buffer: any, start : number, end: number) => {
@@ -29,15 +28,8 @@ export default async (req: CustomRequest, res: Response) => {
     };
 
     const {state, assigneeID} = parsedJSON;
-
-
-    const results = await Promise.all([findByID({id}, Database.TASK), findByID({id: assigneeID}, Database.ASSIGNEE)]);
-    const [existingRecord, assignee] = results;
-
-    if (!existingRecord) {
-      return res.status(404).json('record not found');
-    }
-
+    const api = await serverWrite();
+    const assignee = api.getAssignees().filter((e : Assignee) => e.id === assigneeID)[0];
     if (!assignee) {
       return res.status(404).json('assignee not found ');
     }
@@ -46,7 +38,15 @@ export default async (req: CustomRequest, res: Response) => {
       return res.status(404).json('no state provided not found ');
     }
 
-    await update({...existingRecord, assigneeID, state, image: imageBased64, last_updated_at: new Date().toISOString()}, Database.TASK);
+    const existingRecord = api.getTask().filter((e : Task) => e.id === id)[0];
+
+    if (!existingRecord) {
+      return res.status(404).json('record not found');
+    }
+
+    await api.updateTask({...existingRecord, assigneeID, state, image: imageBased64, last_updated_at: new Date().toISOString()});
+
+
     return res.status(200).json('Task updated');
   } else {
     return res.status(400).json('Bad Request');

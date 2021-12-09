@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
-import {insert} from '../service/db';
 import {v4 as uuid} from 'uuid';
 import {Assignee} from '../types/types';
+import {serverWrite} from '../service/serverExcutetor';
 
 export default async (req: Request, res: Response) => {
   const {name} = req.body;
@@ -9,6 +9,7 @@ export default async (req: Request, res: Response) => {
     id: uuid(),
     name,
   };
-  await insert(assignee, 'assignee');
+  const api =await serverWrite();
+  await api.createAssignee(assignee);
   return res.status(200).json('Added Assigned');
 };

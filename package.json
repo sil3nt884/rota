@@ -3,12 +3,8 @@
   "version": "0.1.0",
   "main": "src/server/dist/app.js",
   "scripts": {
-      "postinstall": "npm install --prefix src/frontend && npm install --prefix src/server ",
-     "start": "npm run front-build && node src/server/dist/app.js",
+     "start": "node src/server/dist/app.js",
      "backend-build": "cd src/server/ && npm run build",
      "front-build": "cd src/frontend/ && npm run build"
-   },
-  "engines": {
-    "node": "14.18.0"
-  }
+   }
 }

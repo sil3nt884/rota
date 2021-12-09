@@ -1,5 +1,4 @@
 import * as express from 'express';
-// import * as https from 'https';
 import * as http from 'http';
 import * as dotenv from 'dotenv';
 import * as process from 'process';
@@ -10,7 +9,7 @@ import sqlite from './src/service/sqlite';
 import {getTask} from './src/actions/getTask';
 import getAssignees from './src/actions/getAssignee';
 import createAssignee from './src/actions/createAssignee';
-import * as Cache from 'Node-Cache';
+import * as Cache from 'node-cache';
 import byteStreamHandler from './src/handlers/byteStreamHandler';
 import handleUpdates from './src/handlers/handleSubs';
 import {createSub} from './src/handlers/createSub';
@@ -69,3 +68,4 @@ const server = {
 };
 
 server.start();
+

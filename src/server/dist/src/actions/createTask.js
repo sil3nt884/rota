@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var db_1 = require("../service/db");
 var uuid_1 = require("uuid");
+var serverExcutetor_1 = require("../service/serverExcutetor");
 exports["default"] = (function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, description, taskBody;
+    var _a, title, description, taskBody, api;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -52,8 +52,11 @@ exports["default"] = (function (req, res) { return __awaiter(void 0, void 0, voi
                     created_at: new Date().toISOString(),
                     last_updated_at: new Date().toISOString()
                 };
-                return [4, (0, db_1.insert)(taskBody, 'task')];
+                return [4, (0, serverExcutetor_1.serverWrite)()];
             case 1:
+                api = _b.sent();
+                return [4, api.createTask(taskBody)];
+            case 2:
                 _b.sent();
                 return [2, res.status(200).json('Added Task')];
         }
