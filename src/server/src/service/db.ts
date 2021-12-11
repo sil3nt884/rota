@@ -1,6 +1,5 @@
 
 
-
 export const insert = (object : any, table : string) => {
   const cols = Object.keys(object);
   const insetstm = `insert into "${table}" (${cols.join(',')}) values (${cols.map((e) => `${'$'+e}`).join(',')});`;
@@ -17,7 +16,5 @@ export const update = (object : any, table : string) => {
   updateValues.push(id);
   return {updateStatement, values: updateValues};
 };
-
-
 
 

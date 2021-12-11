@@ -15,8 +15,8 @@ export const createSub = async (req: Request, res: Response) => {
   const subscriptionRequest = req.body;
   const susbscriptionId = createHash(JSON.stringify(subscriptionRequest));
   subscriptions[susbscriptionId] = subscriptionRequest;
-  const record = {id: susbscriptionId, value: JSON.stringify(subscriptions[susbscriptionId])};
-  await insert(record, 'subscriptions').catch(e => res.status(400));
+  // const record = {id: susbscriptionId, value: JSON.stringify(subscriptions[susbscriptionId])};
+  // await insert(record, 'subscriptions').catch(e => res.status(400));
 
   res.status(201).json({id: susbscriptionId});
 };

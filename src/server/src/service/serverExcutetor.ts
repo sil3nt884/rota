@@ -3,7 +3,9 @@ import {insert, update} from './db';
 import {Assignee, Task} from '../types/types';
 import * as dotenv from 'dotenv';
 import * as process from 'process';
+import * as Event from 'events';
 
+const events = new Event();
 
 const config = dotenv.config().parsed;
 
@@ -18,7 +20,7 @@ console.log(serverAddress);
 
 const request = (url : string) => {
   return {
-    get: () => {
+    get: () : any => {
       return new Promise((resolve, reject) => {
         const parsedURL = new URL(url);
         const options = {
@@ -90,17 +92,79 @@ const pollSeverStatus = async () => {
   }
 };
 
+const delay = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('');
+    }, 10 * 1000);
+  });
+};
 
-const assignees : Assignee[] = [];
-const tasks : Task[] = [];
+export const pollSeverStatusContinuous = async () => {
+  await delay();
+  const serveStatus = await isServerAlive();
+  if (serveStatus) {
+    events.emit('serverAlive');
+  }
+  await pollSeverStatusContinuous();
+};
+
+
+let assignees : Assignee[] = [];
+let tasks : Task[] = [];
+let listenerSet = false;
+const sync = async () => {
+  if (!listenerSet) {
+    events.on('serverAlive', async () => {
+      console.log('syncing');
+      await request(`${serverAddress}/sync`).post(JSON.stringify({
+        assignees,
+        tasks,
+      }));
+    });
+    listenerSet = true;
+  }
+};
+
+let once = false;
+export const load = async () => {
+  if (!once) {
+    const status: any = await pollSeverStatus();
+    const isAlive = status && status.statusCode === 200;
+    if (isAlive) {
+      const {
+        body: {
+          assignees: a,
+          task: t,
+        },
+      } = await request(`${serverAddress}/load`).get();
+      if (a) {
+        assignees = a;
+      }
+      if (t) {
+        tasks = t;
+      }
+    } else {
+      assignees = [];
+      tasks = [];
+      console.log('load failed');
+      return;
+    }
+    once = true;
+  }
+};
+
 export const serverWrite = async () => {
+  pollSeverStatusContinuous();
+  sync();
+
   const api = {
     createAssignee: async (assignee : Assignee ) => {
       const status : any = await pollSeverStatus();
       const isAlive = status && status.statusCode === 200;
       if (isAlive) {
         console.log('writing  assignee to server');
-        const sql = await insert(assignee, 'assignee');
+        const sql = insert(assignee, 'assignee');
         assignees.push(assignee);
         await request(`${serverAddress}/write`).post(JSON.stringify({sql}));
       } else {
@@ -115,7 +179,7 @@ export const serverWrite = async () => {
       const isAlive = status && status.statusCode === 200;
       if (isAlive) {
         console.log('writing  task to server');
-        const sql = await insert(task, 'task');
+        const sql = insert(task, 'task');
         tasks.push(task);
         await request(`${serverAddress}/write`).post(JSON.stringify({sql}));
       } else {
@@ -141,7 +205,10 @@ export const serverWrite = async () => {
         tasks[index] = {...t, ...task};
       }
     },
+
+
   };
+
 
   return api;
 };
